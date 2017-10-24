@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- Allows the browser to match the screen or device's width in device independent pixels
+initial-scale=1 instructs the browser to use a 1:1 relationship between device independent pixels and css pixels-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Back To School Jamaica</title>
+<link rel="stylesheet" href = "style.css">
+
+
+<script type="text/javascript" src="script.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+ $(document).ready(function()
+ {
+ $("#register").click(function(){
+ var firstname=$("#firstname").val();
+ var lastname=$("#lastname").val();
+ var email=$("#email").val();
+ var password=$("#password").val();
+ var town=$("#town").val();
+ var telephone=$("#telephone").val();
+ var parish=$("#parish").val();
+ var studentForm="";
+ 
+ 
+ var dataString="firstname="+firstname+"&lastname="+lastname+"&email="+email+"&password="+password+"&town="+town+"&telephone="+telephone+"&parish="+parish+"&studentForm="+studentForm+"&register=";
+ 
+ if($.trim(firstname).length>0 & $.trim(lastname).length>0 & $.trim(email).length>0 & $.trim(password).length>0 & $.trim(town).length>0 & $.trim(telephone).length>0 & $.trim(parish).length>0)
+ {
+ $.ajax({
+ type: "POST",
+ url:"http://localhost/gamegame/register.php",
+ data: dataString,
+ crossDomain: true,
+ cache: false,
+ beforeSend: function(){ $("#register").val('Connecting...');},
+ success: function(data){alert(data);
+ if(data=="success")
+ { 
+
+ alert("registered");
+ $("#register").val('submit');
+ $(location).attr('href', 'index.html');
+       
+ }
+ else if(data=="error")
+ {
+ alert("error"); 
+
+ }
+ }
+  
+ });
+ }return false; 
+ });
+ });
+ </script>
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+		
+	<div class = "register input_boxes" name = "register" id="register">	
+		<form method="post" action="register.php">
+			<input type = "hidden" name = "studentForm" value="student">
+			<input type="text" name = "firstname" placeholder ="firstname" required id="firstname">
+			<input type="text" name = "lastname" placeholder ="lastname" required id="lastname">
+			<input type="email" name = "email" placeholder ="Your Email Address" required id="email">
+			<input type="password" name = "password" placeholder ="Your Password" required id="password">
+			<input type ="text" name = "town" placeholder = "town" id="town">
+			<input type="number" name = "telephone" placeholder ="Telephone" maxlength="11" id="telephone">
+			<select name="parish" id="parish">
+<option value = '-1'>Parish</option>
+<option value = '1'>Kingston and St.Andrew</option>
+<option value = '2'>St.Elizabeth</option>
+<option value = '3'>Trelawny</option>
+<option value = '4'>St.James</option>
+<option value = '5'>Hanover</option>
+<option value = '6'>Westmoreland</option>
+<option value = '7'>St.Catherine</option>
+<option value = '8'>St.Mary</option>
+<option value = '9'>Clarendon</option>
+<option value = '10'>St.Ann</option>
+<option value = '11'>Manchester</option>
+<option value = '12'>St.Thomas</option>
+<option value = '13'>Portland</option>
+</select>	
+
+			<input type = "submit" value = "Register" id="register">
+		</form>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+</body>
+</html>
