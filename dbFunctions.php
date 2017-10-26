@@ -84,102 +84,8 @@ function schoolLevel(){
 }
 
 
-/*
-This functions takes a variable amount of arguments, which should be in the form of the name of
-the fields in the database you wish to insert in the
-database. In order for this to work, the names of the
-elements in the form must be the same as the onesin the database.
-The last argument in the parameter list must be the name of table that the data should be inserted to.
-
-eg. insertData("email","password","users");
-
-*/
-function insertData(...$fields){
 
 
-
-global $conn;
-
-
-$numElements = count($fields);
-$sql = "INSERT INTO " .$fields[$numElements-1] ." (";
-$i=0;
-
-
-  foreach ($fields as $fieldname){
-
-  if(++$i === $numElements) {
-   break;
-  }
-
- $sql .= $fieldname .",";
-}
-
-	$sql = rtrim($sql,',');
-	$sql .=    ") VALUES (";
-	
-	
-	
- $i=0;	//$x=0;
-foreach ($fields as $fieldname){
-	
-	
-	if(++$i === $numElements) {
-   break;
-  }
-	
-	foreach ($_POST as $key => $value){
-		
-		
-			//if($key===$fields[$x]){
-			if($key===$fieldname){
-				//echo "{$key} = {$fieldname}<BR>";
-				
-				$sql = $sql  ."'" .$value ."',";
-				
-				break;
-			} 
-	}
-
-}
-
-
-//echo "X:" .$x;
-//if($x===1){
-$sql = rtrim($sql,',');
-$sql .= ");";
-
-//}
-/*
-if($x>1)
-$sql .= ");";
-*/
-//echo $sql;
-
-/*
-if ($conn->query($sql) === TRUE) {
-    echo "New record created successfully";
-	return 1;
-} 
-			
-		else
-	{
-    echo "Error: " .$conn->error;
-	return 0;
-}*/
-
-
-if(mysqli_query($conn,$sql)==true)
-{
- echo "success";
-}
-else
-{
-	echo "error";
-	//echo $sql;
-}
-
-}
 
 
 
@@ -281,29 +187,58 @@ else
 
 
 
-function login(){
+function login($table,$selectColumns,$whereColumns){
 	
 global $conn;
+//SELECT * FROM Customers
+//WHERE CustomerID=1;
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+    
 
-$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-$result = mysqli_query($conn, $sql);
+$sql = "SELECT {$selectColumns} FROM " .$table ."  WHERE ("; // top of SELECT sql command
+//$sqlValues=; // begining of the VALUES section of the insert statement
 
-if (mysqli_num_rows($result) > 0){
-	$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-	$result = mysqli_query($conn, $sql);
-		
-	session_start();
-	$row = mysqli_fetch_array($result);
-	$_SESSION["User"] = $row['email'];
-	
-	
-	
-	
-	header('Location:/backtoschool/index.php');
 
-}else echo "Incorrect Login Information! <br> <a href = '/backtoschool'>LOGIN</a>";
+ foreach ($whereColumns as $name => $value){
+ $sql .= $name ." " .$value ." ? ";
+$sql .= " AND "; 
+//$sqlValues .= "?,";
+  }
+	
+	$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
+        $sql .=")";
+//	$sqlValues = rtrim($sqlValues,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
+//	$sqlValues .= ");"; //adds the closing parentheses to the value section of the sql statement
+//	
+//$sql .= $sqlValues; //concatenates the insert and values section of the statement
+	
+
+echo $sql;
+
+
+
+
+
+
+//$email = $_POST['email'];
+//$password = $_POST['password'];
+//
+//$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+//$result = mysqli_query($conn, $sql);
+//
+//if (mysqli_num_rows($result) > 0){
+//	$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
+//	$result = mysqli_query($conn, $sql);
+//		
+//	session_start();
+//	$row = mysqli_fetch_array($result);
+//	$_SESSION["User"] = $row['email'];
+//	
+//	
+//	
+//	
+//	header('Location:/backtoschool/index.php');
+//
+//}else echo "Incorrect Login Information! <br> <a href = '/backtoschool'>LOGIN</a>";
 }
 ?>

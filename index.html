@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!-- Allows the browser to match the screen or device's width in device independent pixels
+initial-scale=1 instructs the browser to use a 1:1 relationship between device independent pixels and css pixels-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Back To School Jamaica</title>
+<!--<link rel="stylesheet" href = "style.css">
+
+
+
+
+<script type="text/javascript" src="script.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+ $(document).ready(function()
+ {
+ $("#register").click(function(){
+
+ var email=$("#email").val();
+ var password=$("#password").val();
+
+ 
+ 
+ var dataString="email="+email+"&password="+password+"&register=";
+ 
+ if($.trim(email).length>0 & $.trim(password).length>0)
+ {
+ $.ajax({
+ type: "POST",
+ url:"http://localhost/gamegame/login.php",
+ data: dataString,
+ crossDomain: true,
+ cache: false,
+ beforeSend: function(){ $("#register").val('Connecting...');},
+ success: function(data){
+ if(data=="success")
+ { 
+if(typeof(Storage) !== "undefined") {alert();
+        if (sessionStorage.user) {
+            sessionStorage.user =email;
+			}
+		}
+ alert("Welcome "+sessionStorage.user);
+ $("#register").val('login');
+ //$(location).attr('href', 'index.html');
+       
+ }
+ else if(data=="error")
+ {
+ alert("error"); 
+
+ }
+ }
+  
+ });
+ }return false; 
+ });
+ });
+ </script>
+
+
+
+
+</head>
+
+<body>
+
+	<div class = "input_boxes">
+		
+			<input type="email" name = "email" placeholder ="Your Email Address" id="email" required>
+			<input type="password" name = "password" placeholder ="Your Password" id="password" required>
+			<input type = "button" value = "Login" id = "register">
+			
+		
+		<a href ="register.html">REGISTER</a>
+	</div>
+	
+	
+<div class="front_options">
+	<a href = "viewallbooks.html"><div class="front_boxes">View Books</div></a>
+	<a href = "addbook.html"><div class="front_boxes">Add Books</div></a>
+	<a href = "viewmybooks.html"><div class="front_boxes">View My Books</div></a>
+</div>
+</body>
+</html>
