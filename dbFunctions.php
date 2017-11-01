@@ -187,8 +187,13 @@ else
 
 
 
-function login($table,$selectColumns,$whereColumns){
-	
+function login($table,$selectColumns,$whereColumns,$cleanList){
+
+    //$table: name of database table, string
+    //$selectColumns: comma seperated columns to be selected, string
+    //$whereColumns:     //$whereColumns: name of columns in where criterion 
+    //name of columns in where criterion 
+    //$cleanList: name of list of selectable columns
 global $conn;
 //SELECT * FROM Customers
 //WHERE CustomerID=1;
