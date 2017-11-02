@@ -3,9 +3,9 @@
  
  require 'dbFunctions.php';
  
- echo "sdfdfs";
  
- login("users","email,firstname",array("email" =>"LIKE" , "password" =>"="));
+
+ login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
  
  
  

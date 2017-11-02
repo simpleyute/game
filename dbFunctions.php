@@ -17,7 +17,7 @@ $conn = mysqli_connect($servername, $username, $password,$dbname);
 */
 
 $servername = "localhost";
-$username = "root";
+$username = "admin";
 $password = "password";
 $dbname = "b16_20204216_mobileapp";
 $conn = mysqli_connect($servername, $username, $password,$dbname);
@@ -129,6 +129,7 @@ $sql .= $sqlValues; //concatenates the insert and values section of the statemen
 $param_value=array(); 
 
 
+
 $i=0;
 $i++;
 foreach($fields as $key => $value)
@@ -182,7 +183,7 @@ else
 	echo "error";
 	//echo $sql;
 }
-*/
+*/      
 }
 
 
@@ -192,7 +193,7 @@ function login($table,$selectColumns,$whereColumns,$cleanList){
     //$table: name of database table, string
     //$selectColumns: comma seperated columns to be selected, string
     //$whereColumns:     //$whereColumns: name of columns in where criterion 
-    //name of columns in where criterion 
+    //name of columns in where criterion: array
     //$cleanList: name of list of selectable columns
 global $conn;
 //SELECT * FROM Customers
@@ -200,7 +201,7 @@ global $conn;
 
     
 
-$sql = "SELECT {$selectColumns} FROM " .$table ."  WHERE ("; // top of SELECT sql command
+$sql = "SELECT ". implode(",",$selectColumns) ."FROM " .$table ."  WHERE ("; // top of SELECT sql command
 //$sqlValues=; // begining of the VALUES section of the insert statement
 
 
@@ -212,13 +213,78 @@ $sql .= " AND ";
 	
 	$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
         $sql .=")";
-//	$sqlValues = rtrim($sqlValues,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
-//	$sqlValues .= ");"; //adds the closing parentheses to the value section of the sql statement
-//	
-//$sql .= $sqlValues; //concatenates the insert and values section of the statement
+
 	
 
 echo $sql;
+
+
+
+
+
+
+
+
+
+
+//the param_value array will be used when using the call_user_func_array 
+//function. It will be populated with the reference addresses of the parameters
+//we need for the call_user_func_array
+$param_value=array(); 
+
+
+$i=0;
+
+foreach($whereColumns as $key =>  $value)
+{
+        $param_value[$i]=&$whereColumns[$value]; //passes a reference to the data in the fields array to the indexed param_value array	
+	$i++;
+}
+
+//array_unshift($param_value,"ss"); //inserts the parameter needed for the prepared statement at the top of the param_value array
+
+$i=0;
+foreach($selectColumns as $select)
+{
+        echo $param_value[$i]; //passes a reference to the data in the fields array to the indexed param_value array	
+$i++;	
+}
+
+////
+
+
+
+/*
+ * 
+ * from the $dynamic sql statement, create a prepared statement. This will assist us in not allowing
+unclean values being sent to the database which may cause an SQL injection
+The $mysqli->prepare object oriented function returns either false of an object
+as such we put it in an if statement to test if it will return false with the prepared
+statement, if not it will continue to bind the values to the sql statement, if false
+it will write an ERROR to a log file, and cordially inform the user of an error.
+*/
+
+$emaa = "mr_reserved2000@yahoo.com";
+$pass = "password";
+if($stmt = $conn->prepare($sql)){	
+    
+        //this function will call the bind parameters function and pass the
+        //$param_value array as parameters
+	call_user_func_array(array($stmt,'bind_param'), $param_value); 
+	//$stmt->bind_param("ss",$emaa,$pass);
+    
+    
+    $stmt->execute(); //execute prepared statement
+
+     /* bind result variables */
+    $stmt->bind_result($firstname, $lastname);
+
+    
+    while ($stmt->fetch()){
+        echo $firstname;
+    }
+    
+}
 
 
 
