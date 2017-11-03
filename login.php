@@ -5,7 +5,27 @@
  
  
 
- login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
+ //login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
+ 
+ 
+ login("students",array("email","password",),
+         
+         array(
+             
+             "email"=> array(
+                 "symbol"=> "=",
+                 "data" => $_POST['email'],
+                 "connector"=>"AND"
+                    ),
+             
+              "password"=> array(
+                 "symbol"=> "=",
+                 "data" => $_POST['password'],
+                 "connector"=>"AND"
+                    )
+               ),
+         
+                "email");
  
  
  

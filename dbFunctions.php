@@ -201,22 +201,27 @@ global $conn;
 
     
 
-$sql = "SELECT ". implode(",",$selectColumns) ."FROM " .$table ."  WHERE ("; // top of SELECT sql command
+$sql = "SELECT ". implode(",",$selectColumns) ." FROM " .$table ."  WHERE ("; // top of SELECT sql command
 //$sqlValues=; // begining of the VALUES section of the insert statement
 
 
- foreach ($whereColumns as $name => $value){
- $sql .= $name ." " .$value ." ? ";
-$sql .= " AND "; 
-//$sqlValues .= "?,";
-  }
+// foreach ($whereColumns as $name => $value){
+// $sql .= $name ." " .$value ." ? ";
+//$sql .= " AND "; 
+////$sqlValues .= "?,";
+//  }
 	
+
+foreach ($whereColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
+  }
+
 	$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
         $sql .=")";
 
 	
 
-echo $sql;
+//echo $sql;
 
 
 
@@ -237,18 +242,13 @@ $i=0;
 
 foreach($whereColumns as $key =>  $value)
 {
-        $param_value[$i]=&$whereColumns[$value]; //passes a reference to the data in the fields array to the indexed param_value array	
+        $param_value[$i]=&$value["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
 	$i++;
 }
 
-//array_unshift($param_value,"ss"); //inserts the parameter needed for the prepared statement at the top of the param_value array
+array_unshift($param_value,"ss"); //inserts the parameter needed for the prepared statement at the top of the param_value array
 
-$i=0;
-foreach($selectColumns as $select)
-{
-        echo $param_value[$i]; //passes a reference to the data in the fields array to the indexed param_value array	
-$i++;	
-}
+
 
 ////
 
@@ -264,8 +264,7 @@ statement, if not it will continue to bind the values to the sql statement, if f
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
 
-$emaa = "mr_reserved2000@yahoo.com";
-$pass = "password";
+
 if($stmt = $conn->prepare($sql)){	
     
         //this function will call the bind parameters function and pass the
@@ -277,11 +276,12 @@ if($stmt = $conn->prepare($sql)){
     $stmt->execute(); //execute prepared statement
 
      /* bind result variables */
-    $stmt->bind_result($firstname, $lastname);
+    $stmt->bind_result($email, $password);
 
     
     while ($stmt->fetch()){
-        echo $firstname;
+        echo $email;
+        echo $password;
     }
     
 }
