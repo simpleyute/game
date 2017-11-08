@@ -8,27 +8,35 @@
  //login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
  
  
- login("students",array("email","password",),
+ $pw = select("students",array("password"),
          
          array(
              
              "email"=> array(
                  "symbol"=> "=",
                  "data" => $_POST['email'],
-                 "connector"=>"AND"
-                    ),
-             
-              "password"=> array(
-                 "symbol"=> "=",
-                 "data" => $_POST['password'],
-                 "connector"=>"AND"
-                    )
-               ),
+                 "connector"=>NULL)),
+//                    ),
+//             
+//              "password"=> array(
+//                 "symbol"=> "=",
+//                 "data" => $_POST['password'],
+//                 "connector"=>"AND"
+//                    )
+//               ),
          
                 "email");
  
  
- 
+ if(password_verify($_POST['password'], $pw["password"]))
+ {
+     echo "success";
+     
+ }
+ else
+ {
+     echo "error";
+ }
 // $email=$_POST['email'];
 // $password=$_POST['password'];
 // 

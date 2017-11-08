@@ -13,7 +13,9 @@ initial-scale=1 instructs the browser to use a 1:1 relationship between device i
 
 
 <script type="text/javascript" src="script.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>-->
+
+<script src="jquery-3.2.1.min.js"></script>
 
 <script type="text/javascript">
  $(document).ready(function()
@@ -31,7 +33,7 @@ initial-scale=1 instructs the browser to use a 1:1 relationship between device i
  {
  $.ajax({
  type: "POST",
- url:"http://localhost/gamegame/game/login.php",
+ url:"http://localhost/gamegame/login.php",
  data: dataString,
  crossDomain: true,
  cache: false,

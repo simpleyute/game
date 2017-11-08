@@ -17,7 +17,7 @@ $conn = mysqli_connect($servername, $username, $password,$dbname);
 */
 
 $servername = "localhost";
-$username = "admin";
+$username = "root";
 $password = "password";
 $dbname = "b16_20204216_mobileapp";
 $conn = mysqli_connect($servername, $username, $password,$dbname);
@@ -188,7 +188,7 @@ else
 
 
 
-function login($table,$selectColumns,$whereColumns,$cleanList){
+function select($table,$selectColumns,$whereColumns,$cleanList){
 
     //$table: name of database table, string
     //$selectColumns: comma seperated columns to be selected, string
@@ -216,12 +216,12 @@ foreach ($whereColumns as $name => $value ){
   $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
   }
 
-	$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
+	//$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
         $sql .=")";
 
 	
 
-//echo $sql;
+echo $sql;
 
 
 
@@ -246,7 +246,7 @@ foreach($whereColumns as $key =>  $value)
 	$i++;
 }
 
-array_unshift($param_value,"ss"); //inserts the parameter needed for the prepared statement at the top of the param_value array
+array_unshift($param_value,"s"); //inserts the parameter needed for the prepared statement at the top of the param_value array
 
 
 
@@ -273,15 +273,15 @@ if($stmt = $conn->prepare($sql)){
 	//$stmt->bind_param("ss",$emaa,$pass);
     
     
-    $stmt->execute(); //execute prepared statement
+    $result=$stmt->execute(); //execute prepared statement
 
      /* bind result variables */
-    $stmt->bind_result($email, $password);
-
+    //$stmt->bind_result( $password);
+    $row=$result->fetch_array(MYSQLI_ASSOC);
     
     while ($stmt->fetch()){
-        echo $email;
-        echo $password;
+        return $result;
+       
     }
     
 }
