@@ -26,9 +26,9 @@
 //               ),
          
                 "email");
+ echo $pw;
  
- 
- if(password_verify($_POST['password'], $pw["password"]))
+ if(password_verify($_POST['password'], $pw))
  {
      echo "success";
      

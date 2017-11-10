@@ -245,8 +245,7 @@ foreach($whereColumns as $key =>  $value)
         $param_value[$i]=&$value["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
 	$i++;
 }
-
-array_unshift($param_value,"s"); //inserts the parameter needed for the prepared statement at the top of the param_value array
+//array_unshift($param_value,"s"); //inserts the parameter needed for the prepared statement at the top of the param_value array
 
 
 
@@ -263,27 +262,29 @@ as such we put it in an if statement to test if it will return false with the pr
 statement, if not it will continue to bind the values to the sql statement, if false
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
-
+$test;
 
 if($stmt = $conn->prepare($sql)){	
     
         //this function will call the bind parameters function and pass the
         //$param_value array as parameters
-	call_user_func_array(array($stmt,'bind_param'), $param_value); 
-	//$stmt->bind_param("ss",$emaa,$pass);
+	//call_user_func_array(array($stmt,'bind_result'), $test); 
+	
     
     
-    $result=$stmt->execute(); //execute prepared statement
-
+    $stmt->execute(); //execute prepared statement
+$stmt->bind_result($test);
+    //$stmt->store_result(); // store result set
+    
      /* bind result variables */
     //$stmt->bind_result( $password);
-    $row=$result->fetch_array(MYSQLI_ASSOC);
+    //$row=$result->fetch_array(MYSQLI_ASSOC);
     
     while ($stmt->fetch()){
-        return $result;
+         printf("%s\n", $test);
        
     }
-    
+    echo $test;
 }
 
 
