@@ -284,7 +284,7 @@ if($stmt){
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-function delete($table,$selectColumns,$whereColumns,$cleanList){
+function delete($table,$whereColumns,$cleanList){
 
     //$table: name of database table, string
     //$selectColumns: comma seperated columns to be selected, string
@@ -347,18 +347,19 @@ if($stmt){
    //$param_value array as parameters
     call_user_func_array(array($stmt,'bind_param'), $param_value); 
        
-    $stmt->execute(); //execute prepared statement      
+    if($stmt->execute()){ //execute prepared statement      
     
     /* free results */
    $stmt->free_result();
    /* close statement */
    $stmt->close();
     
-   return $result; 
+   return true; 
 
     
     }
-	
+    return false;
+}
 
 }
 
@@ -368,7 +369,7 @@ if($stmt){
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-function update($table,$selectColumns,$whereColumns,$cleanList){
+function update($table,$setColumns,$whereColumns,$cleanList){
 
     //$table: name of database table, string
     //$selectColumns: comma seperated columns to be selected, string
@@ -377,16 +378,24 @@ function update($table,$selectColumns,$whereColumns,$cleanList){
     //$cleanList: name of list of selectable columns
 global $conn;
 
-$sql = "UPDATE ".$table ."  WHERE ("; // top of DELETE sql command
+$sql = "UPDATE ".$table ."  SET "; // top of DELETE sql command
 	
 
-foreach ($whereColumns as $name => $value ){
-  $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
+
+foreach ($setColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " ." , ";
   }
 
-	
-        $sql .=")";
+$sql = rtrim($sql,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop	
+        $sql .=" WHERE ";
 
+
+foreach ($whereColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " ." , ";
+  }
+        
+$sql = rtrim($sql,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop	        
+$sql .=" ;";        
 
 //echo $sql;
 
@@ -399,6 +408,15 @@ $param_value=array();
 $i=0;
 $types=NULL; //types is the types of variable which will be used in the bind_param function
 
+$keys = array_keys($setColumns); // used to index an associative array ;)
+foreach($setColumns as $key =>  $value)
+{
+        $param_value[$keys[$i]]=&$setColumns[$keys[$i]]["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
+	$i++;
+        $types .= "s";
+}
+
+
 $keys = array_keys($whereColumns); // used to index an associative array ;)
 foreach($whereColumns as $key =>  $value)
 {
@@ -406,7 +424,6 @@ foreach($whereColumns as $key =>  $value)
 	$i++;
         $types .= "s";
 }
-
 /*
  * 
  * from the $dynamic sql statement, create a prepared statement. This will assist us in not allowing
@@ -431,16 +448,17 @@ if($stmt){
    //$param_value array as parameters
     call_user_func_array(array($stmt,'bind_param'), $param_value); 
        
-    $stmt->execute(); //execute prepared statement      
+   if( $stmt->execute()){ //execute prepared statement      
     
     /* free results */
    $stmt->free_result();
    /* close statement */
    $stmt->close();
     
-   return $result; 
-
-    
+   
+return true;
+   }
+   return false; 
     }
 	
 
