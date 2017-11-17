@@ -33,12 +33,12 @@ initial-scale=1 instructs the browser to use a 1:1 relationship between device i
  {
  $.ajax({
  type: "POST",
- url:"http://localhost/gamegame/login.php",
+ url:"http://localhost/gamegame/game/login.php",
  data: dataString,
  crossDomain: true,
  cache: false,
  beforeSend: function(){ $("#register").val('Connecting...');},
- success: function(data){alert(data);
+ success: function(data){
  if(data=="success")
  { 
 if(typeof(Storage) !== "undefined") {alert();

@@ -8,14 +8,14 @@
  //login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
  
  
- $pw = select("students",array("password"),
+ $result = select("students",array("password"),
          
          array(
              
              "email"=> array(
                  "symbol"=> "=",
                  "data" => $_POST['email'],
-                 "connector"=>NULL)),
+                 "connector"=>"")),
 //                    ),
 //             
 //              "password"=> array(
@@ -26,9 +26,10 @@
 //               ),
          
                 "email");
- echo $pw;
+ $pw=$result->fetch_assoc();
  
- if(password_verify($_POST['password'], $pw))
+ 
+ if(password_verify($_POST['password'], $pw["password"]))
  {
      echo "success";
      
