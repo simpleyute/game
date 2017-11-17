@@ -221,7 +221,7 @@ foreach ($whereColumns as $name => $value ){
 
 	
 
-echo $sql;
+//echo $sql;
 
 
 
@@ -263,27 +263,49 @@ statement, if not it will continue to bind the values to the sql statement, if f
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
 $test;
-
-if($stmt = $conn->prepare($sql)){	
+$stmt = $conn->stmt_init();
+if($stmt->prepare($sql)){	
     
         //this function will call the bind parameters function and pass the
         //$param_value array as parameters
 	//call_user_func_array(array($stmt,'bind_result'), $test); 
 	
-    
+     /* bind result variables */
+    $stmt->bind_param("s", $password);
     
     $stmt->execute(); //execute prepared statement
-$stmt->bind_result($test);
+//$stmt->bind_result($test);
+//
+//
+  //$result = $stmt->get_result();
     //$stmt->store_result(); // store result set
     
-     /* bind result variables */
-    //$stmt->bind_result( $password);
-    //$row=$result->fetch_array(MYSQLI_ASSOC);
     
-    while ($stmt->fetch()){
-         printf("%s\n", $test);
-       
-    }
+    $stmt->bind_result($result);
+    //$row=$result->fetch_array(MYSQLI_ASSOC);
+    $stmt->fetch();
+    
+    if (empty($result))
+{
+        echo "asdsad";
+    return false;
+}
+else
+{
+    $this->setPass(true);
+    return $result;
+}
+    
+//  while ($row = $result->fetch_array(MYSQLI_NUM))
+//        {
+//            foreach ($row as $r)
+//            {
+//                print "$r ";
+//            }
+//            print "\n";
+//        }
+  
+  
     echo $test;
 }
 
