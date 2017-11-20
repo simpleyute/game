@@ -188,38 +188,29 @@ else
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 function select($table,$selectColumns,$whereColumns,$cleanList){
 
     //$table: name of database table, string
     //$selectColumns: comma seperated columns to be selected, string
-    //$whereColumns:     //$whereColumns: name of columns in where criterion 
+    //$whereColumns:     //$whereColumns: name of columns in where critera 
     //name of columns in where criterion: array
     //$cleanList: name of list of selectable columns
 global $conn;
-//SELECT * FROM Customers
-//WHERE CustomerID=1;
-
-    
 
 $sql = "SELECT ". implode(",",$selectColumns) ." FROM " .$table ."  WHERE ("; // top of SELECT sql command
-//$sqlValues=; // begining of the VALUES section of the insert statement
-
-
-// foreach ($whereColumns as $name => $value){
-// $sql .= $name ." " .$value ." ? ";
-//$sql .= " AND "; 
-////$sqlValues .= "?,";
-//  }
 	
 
 foreach ($whereColumns as $name => $value ){
   $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
   }
 
-	//$sql = rtrim($sql,' AND '); // this rtrim function will remove the trailing comma at the end of the previous foreach loop
+	
         $sql .=")";
 
-	
 
 //echo $sql;
 
@@ -237,21 +228,16 @@ foreach ($whereColumns as $name => $value ){
 //we need for the call_user_func_array
 $param_value=array(); 
 
-
 $i=0;
+$types=NULL; //types is the types of variable which will be used in the bind_param function
 
+$keys = array_keys($whereColumns); // used to index an associative array ;)
 foreach($whereColumns as $key =>  $value)
 {
-        $param_value[$i]=&$value["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
+        $param_value[$keys[$i]]=&$whereColumns[$keys[$i]]["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
 	$i++;
+        $types .= "s";
 }
-//array_unshift($param_value,"s"); //inserts the parameter needed for the prepared statement at the top of the param_value array
-
-
-
-////
-
-
 
 /*
  * 
@@ -262,77 +248,335 @@ as such we put it in an if statement to test if it will return false with the pr
 statement, if not it will continue to bind the values to the sql statement, if false
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
-$test;
+
+
 $stmt = $conn->stmt_init();
-if($stmt->prepare($sql)){	
+if($stmt){
+   $stmt->prepare($sql);
     
-        //this function will call the bind parameters function and pass the
-        //$param_value array as parameters
-	//call_user_func_array(array($stmt,'bind_result'), $test); 
+		
+
+   //inserts the types types variable to the top ofthe array
+   array_unshift($param_value,$types);
+
+   //this function will call the bind parameters function and pass the
+   //$param_value array as parameters
+    call_user_func_array(array($stmt,'bind_param'), $param_value); 
+       
+    $stmt->execute(); //execute prepared statement      
+    $result=$stmt->get_result(); // gets a result set
+    
+    /* free results */
+   $stmt->free_result();
+   /* close statement */
+   $stmt->close();
+    
+   return $result; 
+
+    
+    }
 	
-     /* bind result variables */
-    $stmt->bind_param("s", $password);
-    
-    $stmt->execute(); //execute prepared statement
-//$stmt->bind_result($test);
-//
-//
-  //$result = $stmt->get_result();
-    //$stmt->store_result(); // store result set
-    
-    
-    $stmt->bind_result($result);
-    //$row=$result->fetch_array(MYSQLI_ASSOC);
-    $stmt->fetch();
-    
-    if (empty($result))
+
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+function delete($table,$whereColumns,$cleanList){
+
+    //$table: name of database table, string
+    //$selectColumns: comma seperated columns to be selected, string
+    //$whereColumns:     //$whereColumns: name of columns in where critera 
+    //name of columns in where criterion: array
+    //$cleanList: name of list of selectable columns
+global $conn;
+
+$sql = "DELETE FROM  ".$table ."  WHERE ("; // top of DELETE sql command
+	
+
+foreach ($whereColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
+  }
+
+	
+        $sql .=")";
+
+
+//echo $sql;
+
+
+//the param_value array will be used when using the call_user_func_array 
+//function. It will be populated with the reference addresses of the parameters
+//we need for the call_user_func_array
+$param_value=array(); 
+
+$i=0;
+$types=NULL; //types is the types of variable which will be used in the bind_param function
+
+$keys = array_keys($whereColumns); // used to index an associative array ;)
+foreach($whereColumns as $key =>  $value)
 {
-        echo "asdsad";
+        $param_value[$keys[$i]]=&$whereColumns[$keys[$i]]["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
+	$i++;
+        $types .= "s";
+}
+
+/*
+ * 
+ * from the $dynamic sql statement, create a prepared statement. This will assist us in not allowing
+unclean values being sent to the database which may cause an SQL injection
+The $mysqli->prepare object oriented function returns either false of an object
+as such we put it in an if statement to test if it will return false with the prepared
+statement, if not it will continue to bind the values to the sql statement, if false
+it will write an ERROR to a log file, and cordially inform the user of an error.
+*/
+
+
+$stmt = $conn->stmt_init();
+if($stmt){
+   $stmt->prepare($sql);
+    
+		
+
+   //inserts the types types variable to the top ofthe array
+   array_unshift($param_value,$types);
+
+   //this function will call the bind parameters function and pass the
+   //$param_value array as parameters
+    call_user_func_array(array($stmt,'bind_param'), $param_value); 
+       
+    if($stmt->execute()){ //execute prepared statement      
+    
+    /* free results */
+   $stmt->free_result();
+   /* close statement */
+   $stmt->close();
+    
+   return true; 
+
+    
+    }
     return false;
 }
-else
+
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+function update($table,$setColumns,$whereColumns,$cleanList){
+
+    //$table: name of database table, string
+    //$selectColumns: comma seperated columns to be selected, string
+    //$whereColumns:     //$whereColumns: name of columns in where critera 
+    //name of columns in where criterion: array
+    //$cleanList: name of list of selectable columns
+global $conn;
+
+$sql = "UPDATE ".$table ."  SET "; // top of DELETE sql command
+	
+
+
+foreach ($setColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " ." , ";
+  }
+
+$sql = rtrim($sql,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop	
+        $sql .=" WHERE ";
+
+
+foreach ($whereColumns as $name => $value ){
+  $sql .= $name ." " .$value["symbol"] ." ? " ." , ";
+  }
+        
+$sql = rtrim($sql,','); // this rtrim function will remove the trailing comma at the end of the previous foreach loop	        
+$sql .=" ;";        
+
+//echo $sql;
+
+
+//the param_value array will be used when using the call_user_func_array 
+//function. It will be populated with the reference addresses of the parameters
+//we need for the call_user_func_array
+$param_value=array(); 
+
+$i=0;
+$types=NULL; //types is the types of variable which will be used in the bind_param function
+
+$keys = array_keys($setColumns); // used to index an associative array ;)
+foreach($setColumns as $key =>  $value)
 {
-    $this->setPass(true);
-    return $result;
+        $param_value[$keys[$i]]=&$setColumns[$keys[$i]]["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
+	$i++;
+        $types .= "s";
 }
+
+
+$keys = array_keys($whereColumns); // used to index an associative array ;)
+foreach($whereColumns as $key =>  $value)
+{
+        $param_value[$keys[$i]]=&$whereColumns[$keys[$i]]["data"]; //passes a reference to the data in the fields array to the indexed param_value array	
+	$i++;
+        $types .= "s";
+}
+/*
+ * 
+ * from the $dynamic sql statement, create a prepared statement. This will assist us in not allowing
+unclean values being sent to the database which may cause an SQL injection
+The $mysqli->prepare object oriented function returns either false of an object
+as such we put it in an if statement to test if it will return false with the prepared
+statement, if not it will continue to bind the values to the sql statement, if false
+it will write an ERROR to a log file, and cordially inform the user of an error.
+*/
+
+
+$stmt = $conn->stmt_init();
+if($stmt){
+   $stmt->prepare($sql);
     
-//  while ($row = $result->fetch_array(MYSQLI_NUM))
-//        {
-//            foreach ($row as $r)
-//            {
-//                print "$r ";
-//            }
-//            print "\n";
-//        }
-  
-  
-    echo $test;
+		
+
+   //inserts the types types variable to the top ofthe array
+   array_unshift($param_value,$types);
+
+   //this function will call the bind parameters function and pass the
+   //$param_value array as parameters
+    call_user_func_array(array($stmt,'bind_param'), $param_value); 
+       
+   if( $stmt->execute()){ //execute prepared statement      
+    
+    /* free results */
+   $stmt->free_result();
+   /* close statement */
+   $stmt->close();
+    
+   
+return true;
+   }
+   return false; 
+    }
+	
+
 }
 
 
 
 
 
+//function generateForm($formName,$method,$action,$inputElements){
+//    
+//    echo "<form name='" .$formName ."' " ." method = '" .$method ."' " ."action = '" .$action ."' " .">";
+//    
+//    foreach($inputElements as $key => $value ){
+//        
+//        //////////////////////////////////
+//        
+//       
+//        
+//        switch($key){
+//            
+//            case 'input':
+//                
+//                echo "<label for = '";
+//                if(array_key_exists('id',$inputElements[$key]))
+//                { echo $inputElements[$key]["id"];}
+//                echo "' > ";
+//                
+//                if(array_key_exists('label',$inputElements[$key]))
+//                { echo $inputElements[$key]["label"];}
+//                
+//                echo "</label>";
+//                
+//                
+//                echo "<input ";
+//                
+//                if(array_key_exists('type',$inputElements[$key]))
+//                    {echo "type ='" .$inputElements[$key]["type"] ."'";}
+//                                 
+//                if(array_key_exists('name',$inputElements[$key]))  
+//                    { echo "name ='" .$inputElements[$key]["name"] ."'";}
+//                    
+//                if(array_key_exists('class',$inputElements[$key])) 
+//                    { echo"class ='" .$inputElements[$key]["class"] ."'";}
+//                
+//                 if(array_key_exists('id',$inputElements[$key]))                   
+//                    { echo "id ='" .$inputElements[$key]["id"] ."'";}
+//                    
+//                if(array_key_exists('placeholder',$inputElements[$key]))                   
+//                    { echo "placeholder ='" .$inputElements[$key]["placeholder"] ."'";}
+//                    
+//                    echo " >";
+//            ;
+//            
+//            
+//        } //closes switch
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//        
+//    }//closes foreach
+//    
+//    
+//    echo "<input type = 'submit' vaule='Submit' > <input type = 'reset' value = 'Reset'>";
+//    echo "</form>";
+//    
+//
+//}
 
-//$email = $_POST['email'];
-//$password = $_POST['password'];
-//
-//$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-//$result = mysqli_query($conn, $sql);
-//
-//if (mysqli_num_rows($result) > 0){
-//	$sql = "SELECT * FROM users WHERE email = '$email' AND password = '$password'";
-//	$result = mysqli_query($conn, $sql);
-//		
-//	session_start();
-//	$row = mysqli_fetch_array($result);
-//	$_SESSION["User"] = $row['email'];
-//	
-//	
-//	
-//	
-//	header('Location:/backtoschool/index.php');
-//
-//}else echo "Incorrect Login Information! <br> <a href = '/backtoschool'>LOGIN</a>";
+
+
+function input($type, $name, $placeholder, $id,$class,$label, $value){
+
+    echo "<label for = '";
+                if($id!=NULL)
+                { echo $id;}
+                echo "' > ";
+                
+                if($label!=NULL)
+                { echo $label;}
+                              
+                echo " </label> ";
+                
+                
+                echo " <input ";
+                
+                if($type!=NULL)
+                { echo " type = '" .$type ."' ";}
+                                                     
+                if($name!=NULL)
+                { echo " name = '" .$name  ."' ";}  
+                
+                if($placeholder!=NULL)
+                { echo " placeholder = '" .$placeholder  ."' ";}
+                
+                if($id!=NULL)
+                { echo " id = '" .$id  ."' ";}
+                
+                if($class!=NULL)
+                { echo " class = '" .$class  ."' ";}
+                
+                if($label!=NULL)
+                { echo " class = '" .$label  ."' ";}
+                
+                 if($value!=NULL)
+                { echo " value = '" .$value  ."' ";}
+                
+                echo " > ";
+    
 }
+
+
+
+
+
 ?>

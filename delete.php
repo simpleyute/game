@@ -4,14 +4,11 @@
  require 'dbFunctions.php';
  
  
- 
- 
- 
 
  //login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
  
- 
- $result = select("students",array("password"),
+ echo "fsdfds";
+ $result = delete("students",
          
          array(
              
@@ -29,10 +26,9 @@
 //               ),
          
                 "email");
- $pw=$result->fetch_assoc();
+
  
- 
- if(password_verify($_POST['password'], $pw["password"]))
+ if($result==true)
  {
      echo "success";
      
