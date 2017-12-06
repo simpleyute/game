@@ -535,7 +535,7 @@ return true;
 
 
 
-function input($type, $name, $placeholder, $id,$class,$label, $value){
+function formInput($type, $name, $placeholder, $id,$class,$label, $value,$title, $additionalAttributes){
 
     echo "<label for = '";
                 if($id!=NULL)
@@ -571,7 +571,17 @@ function input($type, $name, $placeholder, $id,$class,$label, $value){
                  if($value!=NULL)
                 { echo " value = '" .$value  ."' ";}
                 
+                
+                if(isset($additionalAttributes)){
+                foreach($additionalAttributes as $value)
+                {
+                    echo $value;
+                }
+                }
+                
                 echo " > ";
+                
+                
     
 }
 

@@ -23,11 +23,14 @@
  
  echo "<form method = 'post' name = 'login' action = 'login.php'>";
  
- input("text", "email", "Enter Last Name", "lastname", "FrontHeader","Last Name" ,"");
+ formInput("text", "email", "Enter Last Name", "lastname", "FrontHeader","Last Name" ,"","Valid E-Mail Address",array("pattern=''"));
  echo "<br>";
- input("password", "password", "Please enter Your password", "pw", "FrontHeader", "Password","");
+ formInput("password", "password", "Please enter Your password", "pw", "FrontHeader", "Password","");
  echo "<br>";
- input("submit", "", "", "", "","", "submit");
+ 
+ 
+ formInput("radio","gender","","","","male","male"); 
+ formInput("submit", "", "", "", "","", "submit");
  
  echo "</form>";
  
