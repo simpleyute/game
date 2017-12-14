@@ -160,14 +160,25 @@ statement, if not it will continue to bind the values to the sql statement, if f
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
 
+ 
+ $stmt = $conn->stmt_init();
+if($stmt){ 
+    echo $sql;
+//   print_r($param_value);
+   
+        if($stmt->prepare($sql)){
+            echo "sttement prepared";
+        }
 
-if($stmt = $conn->prepare($sql)){	
-    
         //this function will call the bind parameters function and pass the
         //$param_value array as parameters
 	call_user_func_array(array($stmt,'bind_param'), $param_value); 
-	$stmt->execute(); //execute prepared statement
-	}
+	if($stmt->execute()) { //execute prepared statement
+	return "true";
+        } else {
+        return "false";
+        }
+}
 
 	
 	
@@ -583,7 +594,9 @@ function formInput($type, $name, $placeholder, $id,$class,$label, $value,$title,
                 if(isset($additionalAttributes)){
                 foreach($additionalAttributes as $value)
                 {
+                    if ($value!==NULL){
                     echo $value;
+                    }
                 }
                 }
                 
