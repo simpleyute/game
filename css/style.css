@@ -1,0 +1,66 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 13, 2017, 9:42:36 PM
+    Author     : GTS
+*/
+
+.mainmenubar{
+    max-width: 90%;
+    min-width: 90%;
+    min-height: 40px;
+    margin: 0 auto;
+    background-color: #003344; 
+    
+    
+}
+
+.submenubar{
+    max-width: 95%;
+    min-width: 95%;
+    min-height: 40px;
+    margin: 0 auto;
+    border:#003344;
+    border-width: 2px;
+    border-style: solid;
+    /*display:none;*/
+}
+
+.submenuitem{
+   display: inline-block;
+    padding:5px;
+    color: #003344; 
+    
+}
+
+.mainmenuitem{
+    display: inline-block;
+    padding:5px;
+   
+    color: #FFFFFF;
+}
+
+.divider {
+width: 400px;
+margin: 0 0 8px 0;
+border-top-width: 1px;
+border-top-style: solid;
+border-top-color: #6273bf;
+padding-top: 4px;
+padding-bottom: 4px;
+}
+
+label{
+    
+    display: inline-block;
+    width: 200px;
+  text-align: left;
+  margin: 0 100px 0 0;
+}
+
+.textInput{
+    width : 300px;
+}

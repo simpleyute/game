@@ -15,7 +15,8 @@
          
          array(
              
-             "email"=> array(
+             "WHERE"=> array(
+                 "conditionTableName" => "email",
                  "symbol"=> "=",
                  "data" => $_POST['email'],
                  "connector"=>"")),

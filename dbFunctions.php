@@ -28,10 +28,10 @@ $conn = mysqli_connect($servername, $username, $password,$dbname);
 header("Access-Control-Allow-Origin: *");
 
 
-function parishGenerator(){
+function parishGenerator($name){
 	echo "
 <select name='parish' id='parish'>
-<option value = '-1'>School</option>
+<option value = '-1'>"; echo $name; echo "</option>
 <option value = 'Kingston and St.Andrew'>Kingston and St.Andrew</option>
 <option value = 'St.Elizabeth'>St.Elizabeth</option>
 <option value = 'Trelawny'>Trelawny</option>
@@ -201,18 +201,18 @@ function select($table,$selectColumns,$whereColumns,$cleanList){
     //$cleanList: name of list of selectable columns
 global $conn;
 
-$sql = "SELECT ". implode(",",$selectColumns) ." FROM " .$table ."  WHERE ("; // top of SELECT sql command
+$sql = "SELECT ". implode(",",$selectColumns) ." FROM " .$table ." "; // top of SELECT sql command
 	
 
 foreach ($whereColumns as $name => $value ){
-  $sql .= $name ." " .$value["symbol"] ." ? " .$value["connector"] ." ";
+  $sql .= $name ." " .$value["conditionTableName"] ." " .$value["symbol"]  ." ? " .$value["connector"] ." ";
   }
 
 	
-        $sql .=")";
+        //$sql .=")";
 
 
-//echo $sql;
+echo $sql;
 
 
 
@@ -227,7 +227,6 @@ foreach ($whereColumns as $name => $value ){
 //function. It will be populated with the reference addresses of the parameters
 //we need for the call_user_func_array
 $param_value=array(); 
-
 $i=0;
 $types=NULL; //types is the types of variable which will be used in the bind_param function
 
@@ -249,10 +248,13 @@ statement, if not it will continue to bind the values to the sql statement, if f
 it will write an ERROR to a log file, and cordially inform the user of an error.
 */
 
-
+if(strpos($sql,"?")!==FALSE){
 $stmt = $conn->stmt_init();
 if($stmt){
-   $stmt->prepare($sql);
+  
+  
+    
+    $stmt->prepare($sql);
     
 		
 
@@ -262,7 +264,7 @@ if($stmt){
    //this function will call the bind parameters function and pass the
    //$param_value array as parameters
     call_user_func_array(array($stmt,'bind_param'), $param_value); 
-       
+    
     $stmt->execute(); //execute prepared statement      
     $result=$stmt->get_result(); // gets a result set
     
@@ -276,7 +278,11 @@ if($stmt){
     
     }
 	
-
+}
+else{
+    $result=mysql_query($sql);
+    return $result;
+}
 }
 
 
@@ -566,11 +572,13 @@ function formInput($type, $name, $placeholder, $id,$class,$label, $value,$title,
                 { echo " class = '" .$class  ."' ";}
                 
                 if($label!=NULL)
-                { echo " class = '" .$label  ."' ";}
+                { echo " label = '" .$label  ."' ";}
                 
                  if($value!=NULL)
                 { echo " value = '" .$value  ."' ";}
                 
+                 if($title!=NULL)
+                { echo " title = '" .$title  ."' ";}
                 
                 if(isset($additionalAttributes)){
                 foreach($additionalAttributes as $value)
