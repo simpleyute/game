@@ -19,9 +19,12 @@ $conn = mysqli_connect($servername, $username, $password,$dbname);
 $servername = "localhost";
 $username = "root";
 $password = "password";
-$dbname = "b16_20204216_mobileapp";
+$dbname = "b16_20204216_game";
 $conn = mysqli_connect($servername, $username, $password,$dbname);
 
+if ($conn->connect_errno) {
+die("<br />Could not connect to MySQLi Database: " . $conn->connect_error);
+}
 
 
 //ja_mobilepp  
@@ -163,11 +166,11 @@ it will write an ERROR to a log file, and cordially inform the user of an error.
  
  $stmt = $conn->stmt_init();
 if($stmt){ 
-    echo $sql;
+    //echo $sql;
 //   print_r($param_value);
    
-        if($stmt->prepare($sql)){
-            echo "sttement prepared";
+        if(!$stmt->prepare($sql)){
+            echo "Please contact system administrator.";
         }
 
         //this function will call the bind parameters function and pass the
@@ -176,6 +179,7 @@ if($stmt){
 	if($stmt->execute()) { //execute prepared statement
 	return "true";
         } else {
+             printf("Error: %s.\n", $stmt->error);
         return "false";
         }
 }

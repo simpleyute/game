@@ -7,7 +7,9 @@ and open the template in the editor.
     Created on : Dec 13, 2017, 9:42:36 PM
     Author     : GTS
 */
-
+.container{
+    min-height: 800px;
+}
 .mainmenubar{
     max-width: 90%;
     min-width: 90%;

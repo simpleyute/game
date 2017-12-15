@@ -2,6 +2,9 @@
 
 include("head.html");
 
+
+
+echo "<div class = \"container\"";
 echo "potty";
 if(isset($_POST['businessname'])){
 	echo "pot";
@@ -27,7 +30,7 @@ if(isset($_POST['businessname'])){
 						"address" => $_POST['address'] ,
 						"telephone"=>$_POST['telephone'] ,
 						"contact"=>$_POST['contact'] ,
-//						"logo" =>$_POST['logo'],
+						"logo" =>"test", //$_POST['logo'],
 						 "parish"=>$_POST['parish']],
 						
 						"business","sssisss");
@@ -53,7 +56,7 @@ formInput("text","email","Your Email Address","email","textInput", "Email Addres
 echo "<div class = \"divider\"></div>";
 formInput("text", "address", "Enter Street Address", "streetaddress", "textInput","Street Address" ,"","Your Street Address",array(NULL));
 echo "<div class = \"divider\"></div>";
-formInput("text", "telephone", "Enter Telephone Number", "telephone", "textInput","Telephone Number" ,"","Your Business Telephone Number, Please Enter Numbers ONLY!",array("pattern='[0-9]{7,}'"));
+formInput("text", "telephone", "Enter Telephone Number", "telephone", "textInput","Telephone Number" ,"","Your Business Telephone Number, Please Enter At Least 7 Numbers ONLY!",array("pattern='[0-9]{7,}'"));
 echo "<div class = \"divider\"></div>";
 formInput("text", "contact", "Contact Name", "businesscontactname", "textInput","Business Contact Name" ,"","Your Business Person Contact Name",array(NULL));
 echo "<div class = \"divider\"></div>";
@@ -72,7 +75,7 @@ formInput("submit", "", "", "", "","", "submit","",array(NULL));
     
     
 </form>    
-
+</div>
 <?php
 include("foot.html");
 ?>
