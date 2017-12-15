@@ -30,14 +30,22 @@ if(isset($_POST['businessname'])){
 						"address" => $_POST['address'] ,
 						"telephone"=>$_POST['telephone'] ,
 						"contact"=>$_POST['contact'] ,
-						"logo" =>"test", //$_POST['logo'],
+						"password" => password_hash($_POST['password'], PASSWORD_DEFAULT) , //$_POST['logo'],
 						 "parish"=>$_POST['parish']],
 						
 						"business","sssisss");
 
 	unset($_POST);
         echo $q;
-	return $q;
+	if($q===true){
+            header('Location:/index.html');
+        }else
+        {
+            writeLog("register.php",$q);
+        }
+        
+        
+       
     
     
     
@@ -54,6 +62,8 @@ formInput("text", "businessname", "Enter Business Name", "businessname", "textIn
 echo "<div class = \"divider\"></div>";
 formInput("text","email","Your Email Address","email","textInput", "Email Address","","Your Email Address", array("pattern='[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'"));
 echo "<div class = \"divider\"></div>";
+formInput("password", "password", "Password", "password", "textInput","Your Login Password" ,"","At least 8 character including one uppercase",array("pattern='(?![0-9]{6,})[0-9a-zA-Z]{6,}'"));
+echo "<div class = \"divider\"></div>";
 formInput("text", "address", "Enter Street Address", "streetaddress", "textInput","Street Address" ,"","Your Street Address",array(NULL));
 echo "<div class = \"divider\"></div>";
 formInput("text", "telephone", "Enter Telephone Number", "telephone", "textInput","Telephone Number" ,"","Your Business Telephone Number, Please Enter At Least 7 Numbers ONLY!",array("pattern='[0-9]{7,}'"));
@@ -63,8 +73,6 @@ echo "<div class = \"divider\"></div>";
 echo "<label for = \"parish\"> Parish</label>";
 parishGenerator("Parish");
 echo "<div class = \"divider\"></div>";
-/*formInput("file", "logo", "Logo of Business", "businesslogo", "textInput","Business Logo" ,"","Your Business Logo",array(NULL));
-echo "<div class = \"divider\"></div>";*/
 formInput("submit", "", "", "", "","", "submit","",array(NULL));
 
 

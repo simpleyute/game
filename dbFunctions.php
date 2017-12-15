@@ -177,10 +177,10 @@ if($stmt){
         //$param_value array as parameters
 	call_user_func_array(array($stmt,'bind_param'), $param_value); 
 	if($stmt->execute()) { //execute prepared statement
-	return "true";
+	return true;
         } else {
-             printf("Error: %s.\n", $stmt->error);
-        return "false";
+//             printf("Error: %s.\n", $stmt->error);
+        return $stmt->error;
         }
 }
 
@@ -227,7 +227,7 @@ foreach ($whereColumns as $name => $value ){
         //$sql .=")";
 
 
-echo $sql;
+//echo $sql;
 
 
 
@@ -610,6 +610,19 @@ function formInput($type, $name, $placeholder, $id,$class,$label, $value,$title,
     
 }
 
+
+
+
+function writeLog($service,$data){
+    
+$file = 'log.txt';
+// open file 
+$fh = fopen($file, 'w') or die('Could not open file!');
+// write to file 
+fwrite($fh, $service .": " .$data ."\n") or die('Could not write to file');
+// close file
+fclose($fh);
+}
 
 
 

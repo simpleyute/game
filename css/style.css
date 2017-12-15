@@ -6,6 +6,11 @@ and open the template in the editor.
 /* 
     Created on : Dec 13, 2017, 9:42:36 PM
     Author     : GTS
+
+main color #00aeff;
+    color : #ccefff;
+    Highlight: #004666;
+
 */
 .container{
     min-height: 800px;
@@ -15,7 +20,8 @@ and open the template in the editor.
     min-width: 90%;
     min-height: 40px;
     margin: 0 auto;
-    background-color: #003344; 
+    background-color: #00aeff;
+    color : #ccefff;
     
     
 }
