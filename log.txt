@@ -1,0 +1,1 @@
+register.php: Duplicate entry 'debbie@collier.com' for key 'email'

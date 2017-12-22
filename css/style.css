@@ -12,8 +12,49 @@ main color #00aeff;
     Highlight: #004666;
 
 */
+
+.infoBox{
+    min-width:40%;
+    max-width:40%;
+    height: 300px;
+    border-style: solid;
+    border-color: #004666;
+    border-radius: 5%;
+    display: inline-block;
+    overflow-y:auto;
+    overflow-x:hidden;
+    margin: 0 auto;
+    padding:15px;
+    
+}
+
+.gameBox{
+    
+    width:40%;
+    height: 300px;
+    border-style: solid;
+    border-color: #004666;
+    border-radius: 5%;
+    display: inline-block;
+    overflow-y:auto;
+    overflow-x:hidden;
+    margin: 0 auto;
+    padding:15px;
+    
+}
+
+.errordiv{
+    border-style: solid;
+    border-color: red;
+    max-width: 90%;
+    min-width: 90%;
+}
 .container{
     min-height: 800px;
+    max-width: 90%;
+    min-width: 90%;
+    margin: 0 auto;
+    
 }
 .mainmenubar{
     max-width: 90%;
@@ -27,13 +68,14 @@ main color #00aeff;
 }
 
 .submenubar{
-    max-width: 95%;
-    min-width: 95%;
+    max-width: 90%;
+    min-width: 89%;
     min-height: 40px;
     margin: 0 auto;
-    border:#003344;
-    border-width: 2px;
+    border-color: #00aeff;
+    border-width: 1px;
     border-style: solid;
+    color:#ccefff;
     /*display:none;*/
 }
 

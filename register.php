@@ -1,13 +1,26 @@
-<?php require 'dbFunctions.php';
+<?php
+
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+require_once 'dbFunctions.php';
+
+include 'library/classFunctions.php';
+$canvas = new classFunctions();
+
 
 include("head.html");
 
 
 
-echo "<div class = \"container\"";
-echo "potty";
-if(isset($_POST['businessname'])){
-	echo "pot";
+echo "<div class = \"container\">";
+
+if(isset($_POST['email'])){
+	
 
 //$q=	insertData2(array("email"=>$_POST['email'],
 //						 "password" => password_hash($_POST['password'], PASSWORD_DEFAULT) ,
@@ -25,23 +38,26 @@ if(isset($_POST['businessname'])){
 	
     
     
-    $q=	insertData2(["name"=>$_POST['businessname'],
-						 "email" => $_POST['email'] ,
+    $q=	$canvas->insertData2(["firstname"=>$_POST['firstname'],
+						 "lastname" => $_POST['lastname'] ,
+                                                  "email" => $_POST['email'] ,
 						"address" => $_POST['address'] ,
 						"telephone"=>$_POST['telephone'] ,
-						"contact"=>$_POST['contact'] ,
 						"password" => password_hash($_POST['password'], PASSWORD_DEFAULT) , //$_POST['logo'],
-						 "parish"=>$_POST['parish']],
-						
-						"business","sssisss");
+						 "parish"=>$_POST['parish'],
+                                                "usertype"=>$_POST['usertype']],
+            
+						"customer","ssssisss");
 
 	unset($_POST);
         echo $q;
 	if($q===true){
-            header('Location:/index.html');
+            
+            header('Location:login.php');
         }else
         {
-            writeLog("register.php",$q);
+            
+            $canvas->writeLog("customer-register.php",$q);
         }
         
         
@@ -58,22 +74,30 @@ if(isset($_POST['businessname'])){
     
 <?php
 
-formInput("text", "businessname", "Enter Business Name", "businessname", "textInput","Business Name" ,"","Your Business Name",array(NULL));
+$canvas->formInput("text", "firstname", "Enter Your First Name", "firstname", "textInput","First Name" ,"","Your First Name",array(NULL));
 echo "<div class = \"divider\"></div>";
-formInput("text","email","Your Email Address","email","textInput", "Email Address","","Your Email Address", array("pattern='[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'"));
+$canvas->formInput("text", "lastname", "Enter Your Last Name", "lastname", "textInput","Last Name" ,"","Your Last Name",array(NULL));
 echo "<div class = \"divider\"></div>";
-formInput("password", "password", "Password", "password", "textInput","Your Login Password" ,"","At least 8 character including one uppercase",array("pattern='(?![0-9]{6,})[0-9a-zA-Z]{6,}'"));
+
+$canvas->formInput("text","email","Your Email Address","email","textInput", "Email Address","","Your Email Address", array("pattern='[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'"));
 echo "<div class = \"divider\"></div>";
-formInput("text", "address", "Enter Street Address", "streetaddress", "textInput","Street Address" ,"","Your Street Address",array(NULL));
+$canvas->formInput("password", "password", "Password", "password", "textInput","Your Login Password" ,"","At least 8 character including one uppercase",array("pattern='(?![0-9]{6,})[0-9a-zA-Z]{6,}'"));
 echo "<div class = \"divider\"></div>";
-formInput("text", "telephone", "Enter Telephone Number", "telephone", "textInput","Telephone Number" ,"","Your Business Telephone Number, Please Enter At Least 7 Numbers ONLY!",array("pattern='[0-9]{7,}'"));
+$canvas->formInput("text", "address", "Enter Street Address", "streetaddress", "textInput","Street Address" ,"","Your Street Address",array(NULL));
 echo "<div class = \"divider\"></div>";
-formInput("text", "contact", "Contact Name", "businesscontactname", "textInput","Business Contact Name" ,"","Your Business Person Contact Name",array(NULL));
+$canvas->formInput("text", "telephone", "Enter Telephone Number", "telephone", "textInput","Telephone Number" ,"","Your Business Telephone Number, Please Enter At Least 7 Numbers ONLY!",array("pattern='[0-9]{7,}'"));
 echo "<div class = \"divider\"></div>";
 echo "<label for = \"parish\"> Parish</label>";
-parishGenerator("Parish");
+$canvas->parishGenerator("Parish");
 echo "<div class = \"divider\"></div>";
-formInput("submit", "", "", "", "","", "submit","",array(NULL));
+echo "<label for = \"usertype\">You are a...</label>";
+echo "<select name =\"usertype\" id = \"usertype\">"
+. "<option value = \"-1\">Register As</option>"
+. "<option value = \"1\">Business</option>"
+. "<option value = \"2\">Gamer</option>"
+. "</select>";
+echo "<div class = \"divider\"></div>";
+$canvas->formInput("submit", "", "", "", "","", "submit","",array(NULL));
 
 
 
