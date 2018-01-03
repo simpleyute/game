@@ -13,31 +13,107 @@ $canvas->newSession();
 include("head.html");
 
 
-if(isset($_GET["site"])){
-    if($_GET['site']==="account"){
+////////////////////////////////////////////////////////////////
+if($_SESSION ["usertype"]==1){
+   
+    
+    if(isset($_GET["site"])){
+
+if($_GET['site']==="account"){
         unset($_GET["site"]);
-        include_once("account.php");
-}else if($_GET["site"]==="admin"){
-        unset($_GET["site"]);  
-        
-        include_once("admin.php");
-}
- 
+        include_once("account.php");        
 }else
 
-if($_SESSION ["usertype"]==1){
-    include_once("business.php");
-    
+if($_GET['site']==="business"){
+        unset($_GET["site"]);
+        include_once("business.php");        
 }else
+
+if($_GET["site"]==="contact"){
+        unset($_GET["site"]);  
+        include_once("contact.php");
+}
+
+
+    }
+
+else    
+{
+        include_once("business.php");
+}
+
+ 
+}
+
+////////////////////////////////////////////////////////////////    
+  
+
 
 if($_SESSION["usertype"]==2){
-    
-    include_once("customer.php");
-}else
-    
-if($_SESSION["usertype"]==3){
-    include_once("admin.php");
+
+    if(isset($_GET["site"])){
+
+if($_GET['site']==="account"){
+        unset($_GET["site"]);
+        include_once("account.php");
+                            }else
+                            
+if($_GET['site']==="customer"){
+        unset($_GET["site"]);
+        include_once("customer.php");
+                            }else
+
+if($_GET["site"]==="contact"){
+        unset($_GET["site"]);  
+        include_once("contact.php");
 }
+                            
+    
+                            }
+else
+    {    
+          include_once("customer.php");
+}
+  
+}
+  
+
+
+if ($_SESSION["usertype"]==3){
+
+    if(isset($_GET["site"])){
+    
+if($_GET["site"]==="addgame"){
+        unset($_GET["site"]);  
+        include_once("addgame.php");
+}else
+
+if($_GET["site"]==="admin"){
+        unset($_GET["site"]);  
+        include_once("admin.php");
+}else
+
+if($_GET["site"]==="account"){
+        unset($_GET["site"]);  
+        include_once("account.php");
+}else
+
+if($_GET["site"]==="contact"){
+        unset($_GET["site"]);  
+        include_once("contact.php");
+}
+
+
+    }
+    
+    else
+    {
+
+
+    include_once("admin.php");
+
+    }
+    }
 
 
 

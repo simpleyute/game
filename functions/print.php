@@ -6,8 +6,13 @@
  * and open the template in the editor.
  */
 
-require '../dbFunctions.php';
-newSession();
+if(!class_exists("classFunctions")){
+    
+include_once ("../dbFunctions.php");
+include '../library/classFunctions.php';
+$canvas = new classFunctions();
+$canvas->newSession();
+}
 
 
 if(isset($_POST["create_pdf"]))  

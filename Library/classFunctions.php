@@ -35,39 +35,10 @@ class classFunctions {
 	";
 }
 
-function schoolGenerator(){
-	echo "
-<select name='school_id' id='school'>
-<option value = '-1'>Parish</option>
-<option value = '1'>Manchester High School</option>
-<option value = '2'>STETHS</option>
-<option value = '3'>Albert Town High School</option>
-<option value = '4'>Spanish Town Primary</option>
-<option value = '5'>Mandeville Infant School</option>
-<option value = '6'>Pembroke Hall High School</option>
-<option value = '7'>Cornwall College</option>
-<option value = '8'>Wolmers Girl</option>
-<option value = '9'>Clarendon College</option>
-<option value = '10'>Marcus Garvey High School</option>
-<option value = '11'>Manchester Evening Institute</option>
-<option value = '12'>St.Thomas Technical High School</option>
-<option value = '13'>St. Jago High School</option>
-</select>	
-	";
-}
 
 
-function schoolLevel(){
-	echo "
-<select name='schoollevel' id='schoollevel'>
-<option value = '-1'>School Level</option>
-<option value = '1'>Infant</option>
-<option value = '2'>Primary/Preparatory</option>
-<option value = '3'>High School</option>
 
-</select>	
-	";
-}
+
 
 
 
@@ -155,7 +126,7 @@ it will write an ERROR to a log file, and cordially inform the user of an error.
  
  $stmt = $conn->stmt_init();
 if($stmt){ 
-    //echo $sql;
+    
 //   print_r($param_value);
    
         if(!$stmt->prepare($sql)){
@@ -168,7 +139,8 @@ if($stmt){
 	if($stmt->execute()) { //execute prepared statement
 	return true;
         } else {
-//             printf("Error: %s.\n", $stmt->error);
+            printf("Error: %s.\n", $stmt->error);
+            
         return $stmt->error;
         }
 }
@@ -626,12 +598,20 @@ function writeLog($service,$data){
     
 $file = 'log.txt';
 // open file 
-$fh = fopen($file, 'w') or die('Could not open file!');
+$fh = fopen($file, 'a') or die('Could not open file!');
 // write to file 
 fwrite($fh, $service .": " .$data ."\n") or die('Could not write to file');
 // close file
 fclose($fh);
 }
+
+//function firstRunTest($service,$data){
+//    
+////checks if the file start exists or not and return the true or false
+//$file = 'start';
+//return (file_exists($file));
+//
+//}
 
 
 function newSession(){
@@ -642,34 +622,37 @@ function newSession(){
 //        
 //       }
 //}
-
+session_start();
  if (isset($_SESSION['closed'])) {
        if ($_SESSION['closed'] < time()-900) {
            //if the 'closed' key of $_SESSION is less than the current time minus 
-           //five minutes then end the session as this could be an attacker
+           //15 minutes then end the session as this could be an attacker
            //using an old session ID to gain access to the current session
-           //it could also be an unstable network which has caused
-       }
+           //it could also be an unstable network or the user has not had any activity 
+           //for the past 15 minutes. The system will then log out the user
+       
            //$_SESSION['email']="UNAUTH"; //UNAUTH indicates that the user is not authenticated
            //return;
        
-        header('Location:logout.php');
-       }
+        header('Location:logout.php?timeout=true');
+       }else{
 
 
- session_start();
+ 
 $_SESSION['closed'] = time(); // create a approximate time stamp of when session id was destroyed 
 session_regenerate_id();
 ini_set('session.use_strict_mode', 1);
  //unset($_SESSION['closed']);
 }
 
+}
+}
 
 
-function csvReader(){
+
+function csvReader($file){
     $row = 1;
-
-if(($handle = fopen("upload/quotes.csv","r"))!==FALSE){
+if(($handle = fopen($file,"r"))!==FALSE){
     
     
 //    while(($data = fgetcsv($handle,1000,"#"))!==FALSE){
@@ -681,44 +664,68 @@ if(($handle = fopen("upload/quotes.csv","r"))!==FALSE){
 //            echo $data[$c] . "<br/> \n";
 //        }
 //    }
-    
-    
-    
-    
-    
-    
+            
 if(($data = fgetcsv($handle,1000,"#"))!==FALSE)
 {
     $num =  count ($data); //get number of fields in csv
     $quote=$data[rand(0,$num-1)]; 
-    
-}
-echo "NUM: " .$num;
+    fclose($handle);
+    return $quote;
+}else{
+//echo "NUM: " .$num;
 
 fclose($handle);
+return "Smart";
     
 }
-return $quote;
+
+}
 }
 
 
 function submenu(){
     echo 
- "<div class = \"submenubar\">"
-            ."<div class=\"submenuitem\" id=\"userwelcome\">"
+ "<div class = \"submenubar\">";
+            
+    echo "<div class=\"submenuitem\" id=\"userwelcome\">";
+    
+    if($_SESSION["usertype"]==1){ 
+            echo "<a href = \"canvas.php?site=business\">HOME</a>";
+    }
+    
+    if($_SESSION["usertype"]==2){ 
+            echo "<a href = \"canvas.php?site=customer\">HOME</a>";
+    }
+    
+    if($_SESSION["usertype"]==3){ 
+            echo "<a href = \"canvas.php?site=admin\">HOME</a>";
+    }
+    
+    echo "</div>";
+ 
+    
+    echo "<div class=\"submenuitem\" id=\"userwelcome\">"
                 ."Welcome " .$_SESSION["email"] .", <a href=\"logout.php\">Logout</a>"
             ."</div>"
+            
             ."<div class=\"submenuitem\" id=\"userwelcome\">"
             ."<a href = \"functions/QRcode.php\">Scan QR Code for today's quote</a>"
             ."</div>"
+    
             ."<div class=\"submenuitem\" id=\"userwelcome\">"
-            ."<img src= \"upload/" .$_SESSION["userid"] .".jpg\" width = \"50px\" height = \"50px\">"
+            ."<img src= \"upload/" .$_SESSION["userid"] .".jpg\" width = \"50px\" height = \"50px\">";
+            echo "</div>";
             
-            ."</div>";
 
-            echo "<div class = \"submenuitem\">"; if($_SESSION["userid"]==3){echo "<a href = \"canvas.php?site=admin\">ADMIN SECTION</a>"; echo "</div>";}
-        echo "</div>";//closes sub menu
-        
+    if($_SESSION["usertype"]==3){
+            echo "<div class = \"submenuitem\"><a href = \"canvas.php?site=admin\">ADMIN SECTION</a></div>";
+            echo "<div class = \"submenuitem\"><a href = \"canvas.php?site=addgame\">Add Game</a></div>";
+           
+            }
+
+echo "</div>";
+
+
 echo "<div class = \"container\"> <p></p>";
 
 }
@@ -731,6 +738,5 @@ function thumbnail($path){
     header("Content-Type:image/");
     echo $pic->getimageblob();
 }
-
 
 }

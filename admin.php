@@ -6,11 +6,6 @@
  * and open the template in the editor.
  */
 
-if($_SESSION["usertype"]!=3){
-    header('location:index.html');
-}
-
-$canvas->submenu();
 
 
 
@@ -19,6 +14,7 @@ $customer = $canvas->select(NULL,NULL,NULL,$customerSql);
 
 
 
+$canvas->submenu();
 
 
  
@@ -49,7 +45,7 @@ while($row=$customer->fetch_assoc()){
                                                        .",'parish': $('#" .(string)$rowNum ."6').text()"
                                                        .",'usertype': $('#" .(string)$rowNum ."7').text()"
                                                        .",'id': ".$row["id"] 
-                                                        ."},'POST','updateuser.php')\">Update</a></td></tr>";
+                                                        ."},'POST','updateuser.php') alt = \" Click field data to edit. Then Click \"Update\" to effect update.\"   \">Update</a></td></tr>";
     }
 //reset column counter
     $colNum = 0;
@@ -57,3 +53,7 @@ while($row=$customer->fetch_assoc()){
     }
 
 echo "</table>";
+
+
+
+echo "</div>";

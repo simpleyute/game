@@ -114,3 +114,15 @@ label{
 .textInput{
     width : 300px;
 }
+
+input:valid{
+    background-color: lightgreen;
+}
+
+input[type=submit]{
+    background-color: lightgray;
+}
+
+input[type=password]#login{
+    background-color: white;
+}

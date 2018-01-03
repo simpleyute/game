@@ -10,7 +10,7 @@ include '../library/classFunctions.php';
 $canvas = new classFunctions();
 $canvas->newSession();
 
-    
+    //echo $_GET['id_business'];
 
 $q=	$canvas->insertData2(["id_business"=>$_GET['id_business'],
 						 "id_game"=>$_GET['id_game']],

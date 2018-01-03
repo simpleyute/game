@@ -47,7 +47,7 @@ function ajax(fields,method,webService){
     ajaxObject.onreadystatechange = function(){
     
         if(ajaxObject.readyState===4){
-         //    alert(ajaxObject.responseText);
+             alert(ajaxObject.responseText);
         }
     }
         
@@ -70,13 +70,14 @@ function ajax(fields,method,webService){
             
         }
         
-       //alert( queryString);
+       
        
        
        
        if(method==="GET"){
         ajaxObject.open(method,"services/" + webService + queryString, true);
         ajaxObject.send(null);
+        //alert( queryString);
     }else if(method==="POST"){
         ajaxObject.open(method,"services/" + webService, true);
         ajaxObject.setRequestHeader("Content-type","application/x-www-form-urlencoded");

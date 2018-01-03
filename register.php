@@ -19,24 +19,21 @@ include("head.html");
 
 echo "<div class = \"container\">";
 
-if(isset($_POST['email'])){
+if(!file_exists("start")){
+echo "<div class = \"errordiv\" >"
+        ."This notice is indicating that this is the first run of this web application and the user registered will be registed as an administrator."
+            ."The file \"start\" located in your root folder will be created on first run or when deleted. This existence of this file indicates whether the application is being run for the first time or not."
+        ."</div>";
+}
+
+if(isset($_POST['submit'])){
 	
 
-//$q=	insertData2(array("email"=>$_POST['email'],
-//						 "password" => password_hash($_POST['password'], PASSWORD_DEFAULT) ,
-//						"firstname" => $_POST['firstname'] ,
-//						"lastname"=>$_POST['lastname'] ,
-//						"town"=>$_POST['town'] ,
-//						"telephone" =>$_POST['telephone'],
-//						 "parish"=>$_POST['parish']),
-//						
-//						"students","sssssis");
-//
-//	unset($_POST);
-//	return $q;
-	//header('Location:/backtoschool/index.php');
-	
-    
+if(!file_exists("start"))  {
+    $_POST["usertype"]=3; // this will set the registered user as an admin
+    fopen("start", 'a') or die('Could not open file!'); // create 'start' file
+    fclose("start");
+}  
     
     $q=	$canvas->insertData2(["firstname"=>$_POST['firstname'],
 						 "lastname" => $_POST['lastname'] ,
@@ -97,7 +94,7 @@ echo "<select name =\"usertype\" id = \"usertype\">"
 . "<option value = \"2\">Gamer</option>"
 . "</select>";
 echo "<div class = \"divider\"></div>";
-$canvas->formInput("submit", "", "", "", "","", "submit","",array(NULL));
+$canvas->formInput("submit", "submit", "", "", "","", "submit","",array(NULL));
 
 
 

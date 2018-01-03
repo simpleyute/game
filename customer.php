@@ -8,12 +8,22 @@
  * and open the template in the editor.
  */
 
+
+if(!class_exists("classFunctions")){
+    
+include_once ("/dbFunctions.php");
+include '/library/classFunctions.php';
+$canvas = new classFunctions();
+$canvas->newSession();
+}
+
+
 if($_SESSION["usertype"]!=2){
     header('Location:index.html');
 }
 
 
-//get list of customers
+//get list of games
 $gameSql = "SELECT * FROM game";
 $game = $canvas->select(NULL,NULL,NULL,$gameSql);
 
@@ -23,18 +33,7 @@ $myGameSql = "SELECT name, gametype FROM game g "
 $myGame = $canvas->select(NULL,NULL,NULL,$myGameSql);
 
 
-//echo 
-// "<div class = \"submenubar\">"
-//            ."<div class=\"submenuitem\" id=\"userwelcome\">"
-//                ."Welcome " .$_SESSION["email"] .", <a href=\"logout.php\">Logout</a>"
-//            ."</div>"
-//            ."<div class=\"submenuitem\" id=\"userwelcome\">"
-//            ."<a href = \"functions/QRcode.php\">Scan QR Code for today's quote</a>"
-//            ."</div>"
-//
-//        ."</div>";
-//        
-//echo "<div class = \"container\"> <p></p>";
+
 
 
 $canvas->submenu();
@@ -52,7 +51,7 @@ while($row=$game->fetch_assoc()){
     
     $gamePrint .= "<tr><td>"  .$row["name"] ."</td><td> " .$row["gametype"] ."</td></tr>"; 
     echo "<tr><td>"  .$row["name"] ."</td><td> " .$row["gametype"] ."</td>"; 
-    echo "<td><a href = \"#\" onclick = \"ajax(fields={'id_game' : " .$row["id"] .", 'id_customer' : " . $_SESSION["userid"] ."},'GET','addgame.php')\">Add To My Games</a></td></tr>";
+    echo "<td><a href = \"#\" onclick = \"ajax(fields={'id_game' : " .$row["id"] .", 'id_customer' : " . $_SESSION["userid"] ."},'GET','addCustomerGame.php')\">Add To My Games</a></td></tr>";
 
 }
 $gamePrint .= "</table>";

@@ -10,5 +10,9 @@ session_unset();
 session_destroy();
 
        
-
-  header('Location:index.html');
+if($_GET["timeout"]=="true"){
+  header('Location:login.php?timeout=true');
+}else
+{
+      header('Location:login.php');
+}

@@ -5,6 +5,14 @@
  
  include 'library/classFunctions.php';
 $canvas = new classFunctions();
+
+
+/////if a session is active and a user tries to login close that session
+if(session_status()==PHP_SESSION_ACTIVE){
+session_unset();
+session_destroy();
+}
+
  $canvas->newSession();
 
 include("head.html");
@@ -14,7 +22,14 @@ include("head.html");
  
  echo "<p></p><p></p><p></p><p></p><div class = \"container\">";
  
- 
+ if(isset($_GET["timeout"])){
+     if($_GET["timeout"] =="true"){
+     echo "<div class = \"errordiv\" >"
+     ."Your session has timed out, please login once more."
+     ."</div>";
+     echo "<p></p>";
+                            }
+ }
  
 
  //login("students",array("firstname","lastname"),array("email" =>"=" , "password" =>"="),"email");
@@ -49,7 +64,12 @@ include("head.html");
      $_SESSION["email"]=$_POST["email"];
      $_SESSION["userid"] = $pw["id"];
      $_SESSION["usertype"] = $pw["usertype"];
+     
+     
      header('Location:canvas.php');
+     
+     
+     
  }
  else
  {
@@ -65,7 +85,7 @@ echo "<form method = 'post' name = 'login' action = 'login.php' >";
  
 $canvas->formInput("text","email","Your Email Address","email","textInput", "Email Address","","Your Email Address", array("pattern='[a-zA-Z0-9._-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*'"));
 echo "<div class = \"divider\"></div>";
-$canvas->formInput("password", "password", "Password", "password", "textInput","Your Login Password" ,"","Your Password",array(NULL));
+$canvas->formInput("password", "password", "Password", "login", "textInput","Your Login Password" ,"","Your Password",array(NULL));
 echo "<div class = \"divider\"></div>";
  
 
